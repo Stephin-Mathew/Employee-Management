@@ -101,7 +101,7 @@ export class EmployeeAnalysisComponent {
           data: counts,
           barMaxWidth: 48,
           itemStyle: {
-            color: this.getToken('--accent'),
+            color: this.getToken('--chart-department'),
             borderRadius: [5, 5, 0, 0],
           },
         },
@@ -118,11 +118,11 @@ export class EmployeeAnalysisComponent {
 
     const employees = this.employees();
     const ageGroups = [
-      { name: 'Under 20', value: 0 },
-      { name: '20-29', value: 0 },
-      { name: '30-39', value: 0 },
-      { name: '40-49', value: 0 },
-      { name: '50+', value: 0 },
+      { name: 'Under 20', value: 0, colorToken: '--chart-age-under-20' },
+      { name: '20-29', value: 0, colorToken: '--chart-age-20-29' },
+      { name: '30-39', value: 0, colorToken: '--chart-age-30-39' },
+      { name: '40-49', value: 0, colorToken: '--chart-age-40-49' },
+      { name: '50+', value: 0, colorToken: '--chart-age-50-plus' },
     ];
 
     for (const employee of employees) {
@@ -136,7 +136,15 @@ export class EmployeeAnalysisComponent {
       ageGroups[groupIndex].value++;
     }
 
-    const data = ageGroups.filter((group) => group.value > 0);
+    const data = ageGroups
+      .filter((group) => group.value > 0)
+      .map((group) => ({
+        name: group.name,
+        value: group.value,
+        itemStyle: {
+          color: this.getToken(group.colorToken),
+        },
+      }));
     if (data.length === 0) {
       return null;
     }
@@ -147,13 +155,6 @@ export class EmployeeAnalysisComponent {
 
     return {
       animationDuration: 500,
-      color: [
-        this.getToken('--accent'),
-        this.getToken('--accent-alt'),
-        '#64748b',
-        '#f59e0b',
-        '#ef6b6b',
-      ],
       legend: {
         bottom: 0,
         left: 'center',
