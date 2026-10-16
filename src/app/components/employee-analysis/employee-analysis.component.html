@@ -1,0 +1,42 @@
+<div class="app-layout">
+  <app-sidebar></app-sidebar>
+  <div class="content-area">
+    <app-page-header></app-page-header>
+
+    <div class="page-shell">
+      <main class="analysis-panel page-card">
+        <header class="analysis-heading">
+          <h1>Employee Analysis</h1>
+          <p>Overview of your employee distribution.</p>
+        </header>
+
+        <section class="summary-grid">
+          <article class="summary-card">
+            <span class="summary-label">Total Employees</span>
+            <strong class="summary-value">
+              {{ totalEmployees }}
+            </strong>
+          </article>
+
+          <article class="summary-card">
+            <span class="summary-label">Departments</span>
+            <strong class="summary-value">
+              {{ totalDepartments }}
+            </strong>
+          </article>
+        </section>
+
+        <section class="chart-card">
+          <div class="chart-heading">
+            <h2>Employees by Department</h2>
+            <p>Number of employees in each department</p>
+          </div>
+
+          <app-department-employee-chart
+            [options]="chartOptions()"
+          ></app-department-employee-chart>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

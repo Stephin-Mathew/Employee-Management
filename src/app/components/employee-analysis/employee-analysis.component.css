@@ -1,0 +1,96 @@
+
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  color: var(--text);
+}
+
+.app-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.content-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.analysis-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 12px 16px;
+  overflow-y: auto;
+}
+
+.analysis-heading h1 {
+  color: var(--text-heading);
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.analysis-heading p,
+.chart-heading p {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.summary-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.summary-card,
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border-card);
+  border-radius: 10px;
+  box-shadow: var(--shadow-card);
+}
+
+.summary-card {
+  display: flex;
+  flex: 0 1 220px;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+}
+
+.summary-label {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.summary-value {
+  color: var(--text-heading);
+  font-size: 26px;
+}
+
+.chart-card {
+  padding: 12px;
+}
+
+.chart-heading {
+  margin-bottom: 16px;
+}
+
+.chart-heading h2 {
+  color: var(--text-heading);
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+@media (max-width: 710px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .analysis-panel {
+    padding: 16px;
+    gap: 16px;
+  }
+
+}

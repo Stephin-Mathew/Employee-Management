@@ -1,0 +1,133 @@
+
+import { Component, computed, inject } from '@angular/core';
+import type { EChartsCoreOption } from 'echarts/core';
+
+import { EmployeeService } from '../../services/employee.service';
+import { ThemeService } from '../../services/theme.service';
+
+import { SidebarComponent } from '../ui components/sidebar/sidebar.component';
+import { PageHeaderComponent } from '../ui components/page-header/page-header.component';
+import { DepartmentEmployeeChartComponent } from '../ui components/department-employee-chart/department-employee-chart.component';
+
+@Component({
+  selector: 'app-employee-analysis',
+  standalone: true,
+  imports: [
+    SidebarComponent,
+    PageHeaderComponent,
+    DepartmentEmployeeChartComponent,
+  ],
+  templateUrl: './employee-analysis.component.html',
+  styleUrl: './employee-analysis.component.css',
+})
+export class EmployeeAnalysisComponent {
+  private readonly employeeService = inject(EmployeeService);
+  private readonly themeService = inject(ThemeService);
+
+  public readonly employees = this.employeeService.employees;
+
+  public readonly chartOptions = computed<EChartsCoreOption | null>(() => {
+    this.themeService.theme();
+
+    const employees = this.employees();
+    if (employees.length === 0) {
+      return null;
+    }
+
+    const departmentCounts = new Map<string, number>();
+    for (const employee of employees) {
+      const department = employee.employeeDepartment?.trim() || 'Unassigned';
+      departmentCounts.set(
+        department,
+        (departmentCounts.get(department) ?? 0) + 1,
+      );
+    }
+
+    const departments = [...departmentCounts.keys()];
+    const counts = [...departmentCounts.values()];
+    const textColor = this.getToken('--text');
+    const mutedColor = this.getToken('--text-muted');
+    const borderColor = this.getToken('--border');
+
+    return {
+      animationDuration: 500,
+      grid: {
+        left: 45,
+        right: 20,
+        top: 25,
+        bottom: 65,
+        containLabel: true,
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+        },
+        backgroundColor: this.getToken('--surface'),
+        borderColor,
+        textStyle: {
+          color: textColor,
+        },
+      },
+      xAxis: {
+        type: 'category',
+        data: departments,
+        axisLabel: {
+          color: mutedColor,
+          interval: 0,
+          rotate: departments.length > 4 ? 25 : 0,
+        },
+        axisLine: {
+          lineStyle: { color: borderColor },
+        },
+      },
+      yAxis: {
+        type: 'value',
+        minInterval: 1,
+        axisLabel: {
+          color: mutedColor,
+        },
+        splitLine: {
+          lineStyle: {
+            color: borderColor,
+            type: 'dashed',
+          },
+        },
+      },
+      series: [
+        {
+          name: 'Employees',
+          type: 'bar',
+          data: counts,
+          barMaxWidth: 48,
+          itemStyle: {
+            color: this.getToken('--accent'),
+            borderRadius: [5, 5, 0, 0],
+          },
+        },
+      ],
+      textStyle: {
+        color: textColor,
+        fontFamily: 'Segoe UI, Arial, sans-serif',
+      },
+    };
+  });
+
+  public get totalEmployees(): number {
+    return this.employees().length;
+  }
+
+  public get totalDepartments(): number {
+    return new Set(
+      this.employees()
+        .map((employee) => employee.employeeDepartment?.trim())
+        .filter((department) => !!department),
+    ).size;
+  }
+
+  private getToken(name: string): string {
+    return getComputedStyle(document.documentElement)
+      .getPropertyValue(name)
+      .trim();
+  }
+}
