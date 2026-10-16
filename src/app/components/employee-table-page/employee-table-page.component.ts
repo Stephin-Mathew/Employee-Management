@@ -3,8 +3,6 @@ import { Component, inject } from '@angular/core';
 import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 import { EmployeeModalComponent } from '../ui components/employee-modal/employee-modal.component';
 import { TableHeaderComponent } from '../table-header/table-header.component';
-import { SidebarComponent } from '../ui components/sidebar/sidebar.component';
-import { PageHeaderComponent } from '../ui components/page-header/page-header.component';
 import { CustomTableComponent } from '../ui components/custom-table/custom-table.component';
 import { TableColumn, TableActionEvent } from '../../interfaces/table.interface';
 import { EmployeeInterface } from '../../interfaces/employee.interface';
@@ -13,20 +11,18 @@ import { EmployeeService } from '../../services/employee.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-employee-management',
+  selector: 'app-employee-table-page',
   standalone: true,
   imports: [
-    PageHeaderComponent,
     TableHeaderComponent,
     EmployeeModalComponent,
     DeleteModalComponent,
-    SidebarComponent,
     CustomTableComponent
   ],
-  templateUrl: './employee-management.component.html',
-  styleUrls: ['./employee-management.component.css'],
+  templateUrl: './employee-table-page.component.html',
+  styleUrls: ['./employee-table-page.component.css'],
 })
-export class EmployeeManagementComponent {
+export class EmployeeTablePageComponent {
   
   public searchTerm = '';
   public selectedEmployee: EmployeeInterface | null = null;

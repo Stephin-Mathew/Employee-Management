@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
 
-import { PageHeaderComponent } from '../ui components/page-header/page-header.component';
-import { SidebarComponent } from '../ui components/sidebar/sidebar.component';
-
 interface PageInfo {
   name: string;
   description: string;
@@ -17,7 +14,6 @@ interface FaqItem {
 @Component({
   selector: 'app-about',
   standalone: true,
-  imports: [PageHeaderComponent, SidebarComponent],
   templateUrl: './about.component.html',
   styleUrl: './about.component.css',
 })

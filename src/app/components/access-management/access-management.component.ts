@@ -1,7 +1,5 @@
 import { Component, inject } from '@angular/core';
 
-import { PageHeaderComponent } from '../ui components/page-header/page-header.component';
-import { SidebarComponent } from '../ui components/sidebar/sidebar.component';
 import { CustomCheckboxComponent } from '../ui components/custom-checkbox/custom-checkbox.component';
 import { PermissionName, AuthService } from '../../services/auth.service';
 import { SignupDetails } from '../../interfaces/signup.interface';
@@ -9,7 +7,7 @@ import { SignupDetails } from '../../interfaces/signup.interface';
 @Component({
   selector: 'app-access-management',
   standalone: true,
-  imports: [PageHeaderComponent, SidebarComponent, CustomCheckboxComponent],
+  imports: [CustomCheckboxComponent],
   templateUrl: './access-management.component.html',
   styleUrl: './access-management.component.css',
 })

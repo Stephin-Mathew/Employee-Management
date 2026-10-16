@@ -1,15 +1,4 @@
-<div class="app-layout">
-
-  <app-sidebar></app-sidebar>
-
-  <div class="content-area">
-
-    <app-page-header></app-page-header>
-
-    <div class="page-shell">
-
-      <main class="employee-panel page-card">
-
+<main class="employee-panel page-card">
         <app-table-header
           (searchChange)="onSearchChange($event)"
           [canAdd]="canAdd"
@@ -43,10 +32,4 @@
           ></app-delete-modal>
         }
 
-      </main>
-
-    </div>
-
-  </div>
-
-</div>
+</main>
