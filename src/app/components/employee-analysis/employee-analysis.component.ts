@@ -5,18 +5,12 @@ import type { EChartsCoreOption } from 'echarts/core';
 import { EmployeeService } from '../../services/employee.service';
 import { ThemeService } from '../../services/theme.service';
 
-import { SidebarComponent } from '../ui components/sidebar/sidebar.component';
-import { PageHeaderComponent } from '../ui components/page-header/page-header.component';
 import { CustomChartComponent } from '../ui components/custom-chart/custom-chart.component';
 
 @Component({
   selector: 'app-employee-analysis',
   standalone: true,
-  imports: [
-    SidebarComponent,
-    PageHeaderComponent,
-    CustomChartComponent,
-  ],
+  imports: [CustomChartComponent],
   templateUrl: './employee-analysis.component.html',
   styleUrl: './employee-analysis.component.css',
 })

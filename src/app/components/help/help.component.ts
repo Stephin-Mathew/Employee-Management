@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
 
-import { PageHeaderComponent } from '../ui components/page-header/page-header.component';
-import { SidebarComponent } from '../ui components/sidebar/sidebar.component';
-
 interface HelpSection {
   title: string;
   image: string;
@@ -13,7 +10,6 @@ interface HelpSection {
 @Component({
   selector: 'app-help',
   standalone: true,
-  imports: [PageHeaderComponent, SidebarComponent],
   templateUrl: './help.component.html',
   styleUrl: './help.component.css',
 })
