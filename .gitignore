@@ -12,7 +12,7 @@ dist/
 /node_modules
 npm-debug.log
 yarn-error.log
-/.src.zip
+src.zip
 # IDEs and editors
 .idea/
 .project
