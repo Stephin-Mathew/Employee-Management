@@ -69,7 +69,14 @@
   font-size: 26px;
 }
 
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
 .chart-card {
+  min-width: 0;
   padding: 12px;
 }
 
@@ -81,6 +88,12 @@
   color: var(--text-heading);
   font-size: 18px;
   margin-bottom: 6px;
+}
+
+@media (max-width: 900px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 710px) {
