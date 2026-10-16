@@ -26,15 +26,28 @@
           </article>
         </section>
 
-        <section class="chart-card">
-          <div class="chart-heading">
-            <h2>Employees by Department</h2>
-            <p>Number of employees in each department</p>
-          </div>
+        <section class="charts-grid">
+          <article class="chart-card">
+            <div class="chart-heading">
+              <h2>Employees by Department</h2>
+              <p>Number of employees in each department</p>
+            </div>
 
-          <app-department-employee-chart
-            [options]="chartOptions()"
-          ></app-department-employee-chart>
+            <app-custom-chart
+              [options]="chartOptions()"
+            ></app-custom-chart>
+          </article>
+
+          <article class="chart-card">
+            <div class="chart-heading">
+              <h2>Age Distribution</h2>
+              <p>Employees by age group</p>
+            </div>
+
+            <app-custom-chart
+              [options]="ageChartOptions()"
+            ></app-custom-chart>
+          </article>
         </section>
       </main>
     </div>

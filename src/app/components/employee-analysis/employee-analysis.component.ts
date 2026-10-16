@@ -7,7 +7,7 @@ import { ThemeService } from '../../services/theme.service';
 
 import { SidebarComponent } from '../ui components/sidebar/sidebar.component';
 import { PageHeaderComponent } from '../ui components/page-header/page-header.component';
-import { DepartmentEmployeeChartComponent } from '../ui components/department-employee-chart/department-employee-chart.component';
+import { CustomChartComponent } from '../ui components/custom-chart/custom-chart.component';
 
 @Component({
   selector: 'app-employee-analysis',
@@ -15,7 +15,7 @@ import { DepartmentEmployeeChartComponent } from '../ui components/department-em
   imports: [
     SidebarComponent,
     PageHeaderComponent,
-    DepartmentEmployeeChartComponent,
+    CustomChartComponent,
   ],
   templateUrl: './employee-analysis.component.html',
   styleUrl: './employee-analysis.component.css',
@@ -101,8 +101,92 @@ export class EmployeeAnalysisComponent {
           data: counts,
           barMaxWidth: 48,
           itemStyle: {
-            color: this.getToken('--accent'),
+            color: this.getToken('--chart-department'),
             borderRadius: [5, 5, 0, 0],
+          },
+        },
+      ],
+      textStyle: {
+        color: textColor,
+        fontFamily: 'Segoe UI, Arial, sans-serif',
+      },
+    };
+  });
+
+  public readonly ageChartOptions = computed<EChartsCoreOption | null>(() => {
+    this.themeService.theme();
+
+    const employees = this.employees();
+    const ageGroups = [
+      { name: 'Under 20', value: 0, colorToken: '--chart-age-under-20' },
+      { name: '20-29', value: 0, colorToken: '--chart-age-20-29' },
+      { name: '30-39', value: 0, colorToken: '--chart-age-30-39' },
+      { name: '40-49', value: 0, colorToken: '--chart-age-40-49' },
+      { name: '50+', value: 0, colorToken: '--chart-age-50-plus' },
+    ];
+
+    for (const employee of employees) {
+      const age = employee.employeeAge;
+      if (!Number.isFinite(age) || age < 0) {
+        continue;
+      }
+
+      const groupIndex =
+        age < 20 ? 0 : age < 30 ? 1 : age < 40 ? 2 : age < 50 ? 3 : 4;
+      ageGroups[groupIndex].value++;
+    }
+
+    const data = ageGroups
+      .filter((group) => group.value > 0)
+      .map((group) => ({
+        name: group.name,
+        value: group.value,
+        itemStyle: {
+          color: this.getToken(group.colorToken),
+        },
+      }));
+    if (data.length === 0) {
+      return null;
+    }
+
+    const textColor = this.getToken('--text');
+    const mutedColor = this.getToken('--text-muted');
+    const borderColor = this.getToken('--border');
+
+    return {
+      animationDuration: 500,
+      legend: {
+        bottom: 0,
+        left: 'center',
+        textStyle: {
+          color: mutedColor,
+        },
+      },
+      tooltip: {
+        trigger: 'item',
+        backgroundColor: this.getToken('--surface'),
+        borderColor,
+        textStyle: {
+          color: textColor,
+        },
+        formatter: '{b}: {c} employees ({d}%)',
+      },
+      series: [
+        {
+          name: 'Employees by Age',
+          type: 'pie',
+          radius: '62%',
+          center: ['50%', '43%'],
+          data,
+          label: {
+            color: textColor,
+            formatter: '{d}%',
+          },
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetY: 2,
+            },
           },
         },
       ],

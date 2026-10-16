@@ -11,7 +11,7 @@
   color: var(--text);
 }
 
-.department-chart {
+.custom-chart {
   width: 100%;
   height: 360px;
 }
@@ -27,7 +27,7 @@
 }
 
 @media (max-width: 600px) {
-  .department-chart {
+  .custom-chart {
     height: 300px;
   }
 }

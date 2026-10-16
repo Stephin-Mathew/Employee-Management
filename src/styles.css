@@ -48,6 +48,22 @@
   --danger-border: #fecaca;
   --danger-hover-bg: #fff5f5;
 
+  --text-on-primary: #ffffff;
+  --auth-mark-bg: rgba(255, 255, 255, 0.15);
+  --auth-mark-border: rgba(255, 255, 255, 0.3);
+  --text-on-intro-muted: rgba(255, 255, 255, 0.88);
+  --modal-overlay: rgba(0, 0, 0, 0.4);
+  --shadow-modal-card: 0 4px 10px rgba(0, 0, 0, 0.2);
+  --ring-danger: rgba(220, 38, 38, 0.1);
+  --shadow-toggle-thumb: 0 1px 2px rgb(0 0 0 / 18%);
+
+  --chart-department: #4e79a7;
+  --chart-age-under-20: #4e79a7;
+  --chart-age-20-29: #f28e2b;
+  --chart-age-30-39: #e15759;
+  --chart-age-40-49: #76b7b2;
+  --chart-age-50-plus: #59a14f;
+
   --ring-a: rgba(0, 122, 140, 0.1);
   --ring-b: rgba(10, 143, 163, 0.12);
   --ring-c: rgba(0, 122, 140, 0.15);
@@ -110,6 +126,22 @@
   --danger-modal: #f87171;
   --danger-border: #7f1d1d;
   --danger-hover-bg: #3a1f27;
+
+  --text-on-primary: #ffffff;
+  --auth-mark-bg: rgba(255, 255, 255, 0.15);
+  --auth-mark-border: rgba(255, 255, 255, 0.3);
+  --text-on-intro-muted: rgba(255, 255, 255, 0.88);
+  --modal-overlay: rgba(0, 0, 0, 0.4);
+  --shadow-modal-card: 0 4px 10px rgba(0, 0, 0, 0.2);
+  --ring-danger: rgba(248, 113, 113, 0.18);
+  --shadow-toggle-thumb: 0 1px 2px rgb(0 0 0 / 35%);
+
+  --chart-department: #8fb6dd;
+  --chart-age-under-20: #8fb6dd;
+  --chart-age-20-29: #ffbe7d;
+  --chart-age-30-39: #ff9d9a;
+  --chart-age-40-49: #9ad8d2;
+  --chart-age-50-plus: #a8d98d;
 
   --ring-a: rgba(60, 196, 214, 0.25);
   --ring-b: rgba(60, 196, 214, 0.25);

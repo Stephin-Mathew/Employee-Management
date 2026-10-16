@@ -43,7 +43,7 @@
 
   background-color: var(--primary);
 
-  color: #ffffff;
+  color: var(--text-on-primary);
 
   font-size: 13px;
   font-weight: 700;

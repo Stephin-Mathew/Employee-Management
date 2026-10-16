@@ -18,7 +18,7 @@
   justify-content: center;
   padding: 64px;
   background-color: var(--intro-bg);
-  color: #ffffff;
+  color: var(--text-on-primary);
 }
 
 .intro-content {
@@ -39,9 +39,9 @@
 
   margin-bottom: 28px;
 
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--auth-mark-bg);
 
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid var(--auth-mark-border);
   border-radius: 10px;
 
   font-size: 18px;
@@ -82,7 +82,7 @@
 
   margin: 16px 0 0;
 
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--text-on-intro-muted);
 
   font-size: 16px;
 
@@ -165,7 +165,7 @@ button {
   border: 1px solid var(--primary);
   border-radius: 7px;
 
-  color: #ffffff;
+  color: var(--text-on-primary);
 
   font-family: inherit;
   font-size: 15px;
