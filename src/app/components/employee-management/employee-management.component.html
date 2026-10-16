@@ -16,14 +16,15 @@
           (addEmployee)="openAddModal()"
         ></app-table-header>
 
-        <app-employee-table
-          [employees]="employees()"
+        <app-custom-table
+          [rows]="employees()"
+          [columns]="employeeColumns"
           [searchTerm]="searchTerm"
+          [searchKeys]="employeeSearchKeys"
           [canEdit]="canEdit"
           [canDelete]="canDelete"
-          (editEmployee)="openEditModal($event)"
-          (deleteEmployee)="requestDelete($event)"
-        ></app-employee-table>
+          (rowAction)="onTableAction($event)"
+        ></app-custom-table>
 
         @if (showEmployeeModal) {
           <app-employee-modal
