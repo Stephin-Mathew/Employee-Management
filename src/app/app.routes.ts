@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { EmployeeAnalysisComponent } from './components/employee-analysis/employee-analysis.component';
 import { LoginComponent } from './components/login/login.component';
-import { EmployeeTablePageComponent } from './components/employee-table/employee-table-page.component';
+import { EmployeeTablePageComponent } from './components/employee-table-page/employee-table-page.component';
 import { EmployeeDetailsComponent } from './components/employee-details/employee-details.component';
 import { EmployeeListPageComponent } from './components/employee-list-page/employee-list-page.component';
 import { SignupComponent } from './components/signup/signup.component';

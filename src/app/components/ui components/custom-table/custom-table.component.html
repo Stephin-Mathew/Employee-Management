@@ -3,7 +3,7 @@
     <table>
       <thead>
         <tr>
-          @for (column of columns; track column.key) {
+          @for (column of columns(); track column.key) {
             <th>
               @if (column.sortable) {
                 <button
@@ -13,9 +13,9 @@
                 >
                   {{ column.label }}
 
-                  @if (sortField === column.key) {
+                  @if (sortField() === column.key) {
                     <span>
-                      {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                      {{ sortDirection() === 'asc' ? '↑' : '↓' }}
                     </span>
                   }
                 </button>
@@ -25,23 +25,23 @@
             </th>
           }
 
-          @if (showActions) {
+          @if (showActions()) {
             <th>Actions</th>
           }
         </tr>
       </thead>
 
       <tbody>
-        @for (row of displayedRows; track $index) {
+        @for (row of displayedRows(); track $index) {
           <tr>
-            @for (column of columns; track column.key) {
+            @for (column of columns(); track column.key) {
               <td>{{ getCellValue(row, column.key) }}</td>
             }
 
-            @if (showActions) {
+            @if (showActions()) {
               <td class="actions-cell">
   <div class="row-actions">
-    @if (canEdit) {
+    @if (canEdit()) {
       <button
         type="button"
         class="action-button edit-button"
@@ -54,7 +54,7 @@
       </button>
     }
 
-    @if (canDelete) {
+    @if (canDelete()) {
       <button
         type="button"
         class="action-button delete-button"
@@ -73,7 +73,7 @@
         } @empty {
           <tr>
             <td
-              [attr.colspan]="columns.length + (showActions ? 1 : 0)"
+              [attr.colspan]="columns().length + (showActions() ? 1 : 0)"
               class="empty-state"
             >
               No matching records found.
@@ -82,5 +82,69 @@
         }
       </tbody>
     </table>
+  </div>
+  <div class="pagination">
+    <div class="pagination-info">
+      Showing {{ startItem() }}–{{ endItem() }}
+      of {{ totalItems() }} employees
+    </div>
+
+    <div class="pagination-size">
+      <label for="page-size">Rows per page:</label>
+
+      <select
+        id="page-size"
+        (change)="onPageSizeChange($event)"
+      >
+        @for (size of pageSizeOptions; track size) {
+          <option [value]="size" [selected]="size === pageSize()">
+            {{ size }}
+          </option>
+        }
+      </select>
+    </div>
+
+    <div class="pagination-controls">
+      <button
+        type="button"
+        (click)="goToPage(1)"
+        [disabled]="currentPage() === 1 || totalPages() === 0"
+        aria-label="First page"
+      >
+        «
+      </button>
+
+      <button
+        type="button"
+        (click)="previousPage()"
+        [disabled]="currentPage() === 1 || totalPages() === 0"
+        aria-label="Previous page"
+      >
+        ‹
+      </button>
+
+      <span class="page-indicator">
+        Page {{ totalPages() === 0 ? 0 : currentPage() }}
+        of {{ totalPages() }}
+      </span>
+
+      <button
+        type="button"
+        (click)="nextPage()"
+        [disabled]="currentPage() >= totalPages()"
+        aria-label="Next page"
+      >
+        ›
+      </button>
+
+      <button
+        type="button"
+        (click)="goToPage(totalPages())"
+        [disabled]="currentPage() >= totalPages() || totalPages() === 0"
+        aria-label="Last page"
+      >
+        »
+      </button>
+    </div>
   </div>
 </section>
