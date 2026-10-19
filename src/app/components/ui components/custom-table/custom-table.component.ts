@@ -1,12 +1,4 @@
-import {
-  Component,
-  computed,
-  EventEmitter,
-  input,
-  linkedSignal,
-  Output,
-  signal,
-} from '@angular/core';
+import {Component,computed,effect,EventEmitter,input,Output,signal} from '@angular/core';
 
 import {
   TableColumn,
@@ -35,10 +27,11 @@ export class CustomTableComponent {
   public sortField = signal('');
   public sortDirection = signal<SortDirection>('asc');
 
-  public currentPage = linkedSignal(() => {
+  public currentPage = signal(1);
+  private readonly resetPageOnInputChange = effect(() => {
     this.rows();
     this.searchTerm();
-    return 1;
+    this.currentPage.set(1);
   });
   public pageSize = signal(8);
   public readonly pageSizeOptions = [5, 8, 10, 20, 50];
