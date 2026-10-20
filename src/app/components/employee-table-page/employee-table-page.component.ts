@@ -1,10 +1,16 @@
-import { Component, inject } from '@angular/core';
-
+import { Component, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, EMPTY, finalize, Subject, switchMap, tap } from 'rxjs';
+import { MockEmployeeApiService } from '../../services/mock-employee-api.service';
 import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 import { EmployeeModalComponent } from '../ui components/employee-modal/employee-modal.component';
 import { TableHeaderComponent } from '../table-header/table-header.component';
 import { CustomTableComponent } from '../ui components/custom-table/custom-table.component';
-import { TableColumn, TableActionEvent } from '../../interfaces/table.interface';
+import {
+  TableColumn,
+  TableActionEvent,
+  TableSortEvent,
+} from '../../interfaces/table.interface';
 import { EmployeeInterface } from '../../interfaces/employee.interface';
 import { InputValue } from '../../interfaces/input.interface';
 import { EmployeeService } from '../../services/employee.service';
@@ -25,6 +31,15 @@ import { AuthService } from '../../services/auth.service';
 export class EmployeeTablePageComponent {
   
   public searchTerm = '';
+  public readonly displayedEmployees = signal<EmployeeInterface[]>([]);
+  public readonly currentPage = signal(1);
+  public readonly pageSize = signal(8);
+  public readonly totalItems = signal(0);
+  public readonly sortField = signal<keyof EmployeeInterface | ''>('');
+  public readonly sortDirection = signal<'asc' | 'desc'>('asc');
+  public readonly isLoading = signal(false);
+  public readonly loadError = signal('');
+
   public selectedEmployee: EmployeeInterface | null = null;
   public employeeToDelete: EmployeeInterface | null = null;
   public showEmployeeModal = false;
@@ -38,14 +53,49 @@ export class EmployeeTablePageComponent {
   { key: 'employeeRole', label: 'Role' },
 ];
 
-public readonly employeeSearchKeys = [
-  'employeeName',
-  'employeeId',
-];
-  
-  private employeeService = inject(EmployeeService);
-  private authService = inject(AuthService);
-  public readonly employees = this.employeeService.employees;
+private readonly employeeService = inject(EmployeeService);
+private readonly authService = inject(AuthService);
+private readonly mockEmployeeApi = inject(MockEmployeeApiService);
+private readonly pageRequests = new Subject<void>();
+public readonly allEmployees = this.employeeService.employees;
+
+public constructor() {
+  this.pageRequests
+    .pipe(
+      switchMap(() => {
+        this.isLoading.set(true);
+        this.loadError.set('');
+
+        return this.mockEmployeeApi
+          .getEmployeesPage(
+            this.currentPage(),
+            this.pageSize(),
+            this.searchTerm,
+            this.sortField(),
+            this.sortDirection(),
+          )
+          .pipe(
+            tap((response) => {
+              this.displayedEmployees.set(response.items);
+              this.currentPage.set(response.currentPage);
+              this.pageSize.set(response.pageSize);
+              this.totalItems.set(response.totalItems);
+            }),
+            catchError(() => {
+              this.loadError.set(
+                'Unable to load employees. Please try again.',
+              );
+              return EMPTY;
+            }),
+            finalize(() => this.isLoading.set(false)),
+          );
+      }),
+      takeUntilDestroyed(),
+    )
+    .subscribe();
+
+  this.loadEmployees();
+}
 
   public get canAdd(): boolean {
     return this.authService.hasPermission('add');
@@ -61,7 +111,35 @@ public readonly employeeSearchKeys = [
 
 
   public onSearchChange(value: InputValue): void {
-    this.searchTerm = String(value ?? '').trim();
+    const searchTerm = String(value ?? '').trim();
+    if (searchTerm === this.searchTerm) {
+      return;
+    }
+
+    this.searchTerm = searchTerm;
+    this.currentPage.set(1);
+    this.loadEmployees();
+  }
+
+  public onPageChange(page: number): void {
+    this.currentPage.set(page);
+    this.loadEmployees();
+  }
+
+  public onPageSizeChange(pageSize: number): void {
+    this.pageSize.set(pageSize);
+    this.currentPage.set(1);
+    this.loadEmployees();
+  }
+
+  public onSortChange(sort: TableSortEvent): void {
+    this.sortField.set(sort.field);
+    this.sortDirection.set(sort.direction);
+    this.loadEmployees();
+  }
+
+  private loadEmployees(): void {
+    this.pageRequests.next();
   }
 
   public openAddModal(): void {
@@ -89,9 +167,11 @@ public readonly employeeSearchKeys = [
     if (this.selectedEmployee) {
       if (this.canEdit) {
         this.employeeService.updateEmployee(employee);
+        this.loadEmployees();
       }
     } else if (this.canAdd) {
       this.employeeService.addEmployee(employee);
+      this.loadEmployees();
     }
 
     this.closeEmployeeModal();
@@ -113,6 +193,7 @@ public readonly employeeSearchKeys = [
 
     this.employeeService.deleteEmployee(employee.employeeId);
     this.cancelDelete();
+    this.loadEmployees();
   }
 
   public cancelDelete(): void {

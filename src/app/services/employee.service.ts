@@ -15,7 +15,7 @@ export class EmployeeService {
   // Runs once at startup
   public async initialize(): Promise<void> {
     const storedEmployees = this.readStoredEmployees();
-    if (storedEmployees.length > 0) {
+    if (storedEmployees !== null) {
       this.employeesState.set(storedEmployees);
       return;
     }
@@ -25,16 +25,19 @@ export class EmployeeService {
     this.saveEmployees(seed);
   }
 
-  private readStoredEmployees(): EmployeeInterface[] {
+  private readStoredEmployees(): EmployeeInterface[] | null {
    const savedEmployees = localStorage.getItem(this.storageKey);
     if (!savedEmployees) {
-      return [];
+      return null;
     }
 
     try {
-     return JSON.parse(savedEmployees) as EmployeeInterface[];
+     const employees: unknown = JSON.parse(savedEmployees);
+     return Array.isArray(employees)
+       ? employees as EmployeeInterface[]
+       : null;
     } catch {
-     return [];
+     return null;
     }
   }
 

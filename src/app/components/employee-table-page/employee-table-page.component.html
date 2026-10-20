@@ -6,19 +6,27 @@
         ></app-table-header>
 
         <app-custom-table
-          [rows]="employees()"
+          [rows]="displayedEmployees()"
           [columns]="employeeColumns"
-          [searchTerm]="searchTerm"
-          [searchKeys]="employeeSearchKeys"
+          [currentPage]="currentPage()"
+          [pageSize]="pageSize()"
+          [totalItems]="totalItems()"
+          [sortField]="sortField()"
+          [sortDirection]="sortDirection()"
+          [loading]="isLoading()"
+          [errorMessage]="loadError()"
           [canEdit]="canEdit"
           [canDelete]="canDelete"
+          (pageChange)="onPageChange($event)"
+          (pageSizeChange)="onPageSizeChange($event)"
+          (sortChange)="onSortChange($event)"
           (rowAction)="onTableAction($event)"
         ></app-custom-table>
 
         @if (showEmployeeModal) {
           <app-employee-modal
             [employee]="selectedEmployee"
-            [existingEmployees]="employees()"
+            [existingEmployees]="allEmployees()"
             (save)="saveEmployee($event)"
             (cancel)="closeEmployeeModal()"
           ></app-employee-modal>

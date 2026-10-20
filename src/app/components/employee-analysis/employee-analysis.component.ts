@@ -1,6 +1,7 @@
 
 import { Component, computed, inject } from '@angular/core';
 import type { EChartsCoreOption } from 'echarts/core';
+import type { TooltipComponentFormatterCallbackParams } from 'echarts';
 
 import { EmployeeService } from '../../services/employee.service';
 import { ThemeService } from '../../services/theme.service';
@@ -163,7 +164,12 @@ export class EmployeeAnalysisComponent {
         textStyle: {
           color: textColor,
         },
-        formatter: '{b}: {c} employees ({d}%)',
+        formatter: (params: TooltipComponentFormatterCallbackParams) => {
+          const item = Array.isArray(params) ? params[0] : params;
+          return item
+            ? `${item.marker ?? ''}${item.name}: ${item.value} employees (${item.percent}%)`
+            : '';
+        },
       },
       series: [
         {

@@ -32,14 +32,34 @@
       </thead>
 
       <tbody>
-        @for (row of displayedRows(); track $index) {
+        @if (loading()) {
           <tr>
-            @for (column of columns(); track column.key) {
-              <td>{{ getCellValue(row, column.key) }}</td>
-            }
+            <td
+              [attr.colspan]="columns().length + (showActions() ? 1 : 0)"
+              class="empty-state"
+            >
+              Loading employees...
+            </td>
+          </tr>
+        } @else if (errorMessage()) {
+          <tr>
+            <td
+              [attr.colspan]="columns().length + (showActions() ? 1 : 0)"
+              class="empty-state"
+              role="alert"
+            >
+              {{ errorMessage() }}
+            </td>
+          </tr>
+        } @else {
+          @for (row of rows(); track row.employeeId) {
+            <tr>
+              @for (column of columns(); track column.key) {
+                <td>{{ getCellValue(row, column.key) }}</td>
+              }
 
-            @if (showActions()) {
-              <td class="actions-cell">
+              @if (showActions()) {
+                <td class="actions-cell">
   <div class="row-actions">
     @if (canEdit()) {
       <button
@@ -68,17 +88,18 @@
     }
   </div>
 </td>
-            }
-          </tr>
-        } @empty {
-          <tr>
-            <td
-              [attr.colspan]="columns().length + (showActions() ? 1 : 0)"
-              class="empty-state"
-            >
-              No matching records found.
-            </td>
-          </tr>
+              }
+            </tr>
+          } @empty {
+            <tr>
+              <td
+                [attr.colspan]="columns().length + (showActions() ? 1 : 0)"
+                class="empty-state"
+              >
+                No matching records found.
+              </td>
+            </tr>
+          }
         }
       </tbody>
     </table>
