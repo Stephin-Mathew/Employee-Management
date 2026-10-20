@@ -1,6 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, EMPTY, finalize, Subject, switchMap, tap } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { MockEmployeeApiService } from '../../services/mock-employee-api.service';
 import { DeleteModalComponent } from '../delete-modal/delete-modal.component';
 import { EmployeeModalComponent } from '../ui components/employee-modal/employee-modal.component';
@@ -56,44 +56,11 @@ export class EmployeeTablePageComponent {
 private readonly employeeService = inject(EmployeeService);
 private readonly authService = inject(AuthService);
 private readonly mockEmployeeApi = inject(MockEmployeeApiService);
-private readonly pageRequests = new Subject<void>();
+private readonly destroyRef = inject(DestroyRef);
+private pageRequest: Subscription | null = null;
 public readonly allEmployees = this.employeeService.employees;
 
 public constructor() {
-  this.pageRequests
-    .pipe(
-      switchMap(() => {
-        this.isLoading.set(true);
-        this.loadError.set('');
-
-        return this.mockEmployeeApi
-          .getEmployeesPage(
-            this.currentPage(),
-            this.pageSize(),
-            this.searchTerm,
-            this.sortField(),
-            this.sortDirection(),
-          )
-          .pipe(
-            tap((response) => {
-              this.displayedEmployees.set(response.items);
-              this.currentPage.set(response.currentPage);
-              this.pageSize.set(response.pageSize);
-              this.totalItems.set(response.totalItems);
-            }),
-            catchError(() => {
-              this.loadError.set(
-                'Unable to load employees. Please try again.',
-              );
-              return EMPTY;
-            }),
-            finalize(() => this.isLoading.set(false)),
-          );
-      }),
-      takeUntilDestroyed(),
-    )
-    .subscribe();
-
   this.loadEmployees();
 }
 
@@ -139,7 +106,35 @@ public constructor() {
   }
 
   private loadEmployees(): void {
-    this.pageRequests.next();
+    this.pageRequest?.unsubscribe();
+    this.isLoading.set(true);
+    this.loadError.set('');
+
+    this.pageRequest = this.mockEmployeeApi
+      .getEmployeesPage(
+        this.currentPage(),
+        this.pageSize(),
+        this.searchTerm,
+        this.sortField(),
+        this.sortDirection(),
+      )
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.isLoading.set(false)),
+      )
+      .subscribe({
+        next: (response) => {
+          this.displayedEmployees.set(response.items);
+          this.currentPage.set(response.currentPage);
+          this.pageSize.set(response.pageSize);
+          this.totalItems.set(response.totalItems);
+        },
+        error: () => {
+          this.loadError.set(
+            'Unable to load employees. Please try again.',
+          );
+        },
+      });
   }
 
   public openAddModal(): void {
