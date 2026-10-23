@@ -137,11 +137,11 @@
   --shadow-toggle-thumb: 0 1px 2px rgb(0 0 0 / 35%);
 
   --chart-department: #8fb6dd;
-  --chart-age-under-20: #8fb6dd;
-  --chart-age-20-29: #ffbe7d;
-  --chart-age-30-39: #ff9d9a;
-  --chart-age-40-49: #9ad8d2;
-  --chart-age-50-plus: #a8d98d;
+  --chart-age-under-20: #2563eb;
+  --chart-age-20-29: #b45309;
+  --chart-age-30-39: #be123c;
+  --chart-age-40-49: #0f766e;
+  --chart-age-50-plus: #4d7c0f;
 
   --ring-a: rgba(60, 196, 214, 0.25);
   --ring-b: rgba(60, 196, 214, 0.25);
